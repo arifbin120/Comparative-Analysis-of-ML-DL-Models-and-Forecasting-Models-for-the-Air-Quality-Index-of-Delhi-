@@ -1,0 +1,295 @@
+================================================================================
+  DELHI AQI PROJECT — DEEP LEARNING (ARTIFICIAL NEURAL NETWORKS)
+================================================================================
+
+
+================================================================================
+TABLE 6. ANN CLASSIFICATION MODEL ARCHITECTURES
+================================================================================
+
+Three Artificial Neural Network (ANN) architectures were developed for a
+six-class classification problem using 12 input features.
+
+  Model              Architecture                        Activation  Alpha(α)  Epochs
+  -----------------  ----------------------------------  ----------  --------  ------
+  ANN — Shallow      Input(12)→64→32→Output(6)           ReLU        0.001     60
+  ANN — Deep         Input(12)→256→128→64→32→Output(6)   ReLU        0.0005    65
+  ANN — Regularized  Input(12)→128→64→32→Output(6)       Tanh        0.01      68
+
+Architecture Descriptions:
+
+  ANN — Shallow:
+    Consists of two hidden layers (64 and 32 neurons) with ReLU activation,
+    a learning rate of 0.001, and 60 training epochs. Fewest parameters;
+    suitable for lightweight/fast deployment.
+
+  ANN — Deep:
+    Includes four hidden layers (256, 128, 64, and 32 neurons) with ReLU
+    activation, a lower learning rate of 0.0005, and 65 epochs, allowing it
+    to capture more complex patterns. Best overall performance.
+
+  ANN — Regularized:
+    Uses three hidden layers (128, 64, and 32 neurons) with Tanh activation,
+    a learning rate of 0.01, and 68 epochs, aiming to improve generalization
+    and reduce overfitting. Best for detecting minority classes (Good/Severe).
+
+These architectures were compared to determine the most effective model for
+classification performance.
+
+
+================================================================================
+TABLE 7. ANN CLASSIFICATION PERFORMANCE COMPARISON
+================================================================================
+
+  Model              Val Acc  Test Acc  Macro F1  Weighted F1  CV Acc
+  -----------------  -------  --------  --------  -----------  ------
+  ANN — Shallow      0.8245   0.8686    0.7972    0.8664       0.8558
+  ANN — Regularized  0.8208   0.8741    0.8441    0.8740       0.8499
+  ANN — Deep         0.8446   0.8923    0.8640    0.8924       0.8616  ← BEST
+
+
+--------------------------------------------------------------------------------
+ANN — Deep (Best Performing Model)
+--------------------------------------------------------------------------------
+The deep neural network architecture performed best across all three
+architectures for all metrics. Its test accuracy was 89.23%, and its weighted
+F1-score was 0.8924, indicating it performed excellently and consistently across
+all six CPCB AQI classes. Notably, its macro F1-score was significantly higher
+compared to those of the other two architectures. The macro F1-score gives equal
+weight to all classes, regardless of their representation in the dataset. In this
+regard, the high value indicates that the architecture performs well on minority
+classes, such as Good or Severe, which are less common in urban air quality
+datasets.
+
+
+--------------------------------------------------------------------------------
+ANN — Regularized
+--------------------------------------------------------------------------------
+This model, although the most regularized, achieved fairly competitive results,
+with an accuracy of 87.41% and an F1 score of 0.8740. The macro F1 score is
+significantly higher at 0.8441 than that of the shallow model.
+
+
+--------------------------------------------------------------------------------
+ANN — Shallow (Baseline)
+--------------------------------------------------------------------------------
+The shallow model achieved a test accuracy of 86.86% and a weighted F1 score of
+0.8664, which are reasonable for a network with two hidden layers. Nonetheless,
+a macro F1 score of 0.7972 or lower suggests challenges in accurately
+categorizing minority AQI levels.
+
+
+================================================================================
+TABLE 8. ANN REGRESSION PERFORMANCE — AQI VALUE PREDICTION
+================================================================================
+
+  Model           Architecture      Epochs  R² Score  MAE    RMSE
+  --------------  ----------------  ------  --------  -----  -----
+  ANN Regressor   256→128→64→32     75      0.9862    10.68  13.34
+
+
+================================================================================
+FIG 4.5.1a  ANN ARCHITECTURE & TRAINING DYNAMICS
+================================================================================
+
+Panel 1 — ANN Architecture Diagram:
+  Input(12) → 256 → 128 → 64 → 32 → Output(6)
+  Activation: ReLU (hidden layers) | Optimizer: Adam | L2 Regularization α=0.0005
+
+Panel 2 — Training Loss Curves (All Models):
+  All three models start at ~1.6 cross-entropy loss.
+  ANN Deep ends lowest (~0.20) after 65 epochs.
+  Smooth downward curves — no instability or overfitting visible.
+
+Panel 3 — Validation Accuracy During Training:
+  All models reach 0.80+ within 10 epochs.
+  ANN Deep consistently highest at the 0.87–0.90 band.
+
+Panel 4 — Training Summary Table:
+  Model              Epochs  Val Acc  Test Acc  F1(macro)  CV Acc
+  -----------------  ------  -------  --------  ---------  ------
+  ANN — Shallow      60      0.8245   0.8686    0.7972     0.8558
+  ANN — Deep         65      0.8446   0.8923    0.8640     0.8616
+  ANN — Regularized  68      0.8208   0.8741    0.8441     0.8499
+
+Panel 5 — All ANN Models × All Metrics grouped bar chart:
+  Metrics compared: Val Acc, Test Acc, F1(macro), CV Acc
+  ANN Deep leads on all four metrics.
+
+Panel 6 — ANN Regressor Loss Convergence (Final R²=0.9862):
+  MSE crashes from ~25,000 to near 0 within the first 8 epochs.
+  R² stabilises at ~0.9862 from ~epoch 10 onward.
+  Final R² = 0.9862 (dashed green line marks R²=1 reference).
+
+
+================================================================================
+FIG 4.5.1b  ANN CLASSIFICATION RESULTS
+================================================================================
+
+Top Row — Confusion Matrices (3 models):
+
+  ANN — Shallow (32→64→32→6):
+    Good recall = 0.27 (worst; 0.73 misclassified as Satisfactory)
+    Moderate recall = 0.88
+
+  ANN — Deep (32→256→128→64→32→6):
+    Good recall improves to 0.60 (biggest single gain across all architectures)
+    Severe recall = 0.93
+
+  ANN — Regularized (12→128→64→32→6):
+    Good recall best of all at 0.80 (strong L2+Tanh preserves minority class)
+    Severe drops to 0.70 (trade-off cost of regularization)
+
+Top Right — Input Weight Magnitude (ANN Deep):
+  PM10    ~22  (highest)
+  PM2.5   ~21
+  CO      ~18
+  NOx     ~17
+  Xylene  ~14
+  SO2     ~12
+  NO2, Benzene, NH3, Toluene, NO, O3  (lower, 5–10)
+  O3 lowest — Delhi's AQI is combustion-driven, not photochemical
+
+Middle Left — Per-Class F1 Score (All ANN Models):
+  "Good" is the hardest class across all architectures:
+    Shallow      F1 = 0.37 (approx)
+    Deep         F1 = 0.65 (approx)
+    Regularized  F1 = 0.70 (approx)
+  Moderate / Poor / Very Poor all 0.88–0.92 across all models.
+
+Middle Right — Precision & Recall per Class (ANN Deep):
+  Best balanced: Moderate (P=0.90, R=0.90), Very Poor (P=0.90, R=0.91)
+  Cautious on Good: P=0.82, R=0.60 (misses some clean days — safe error)
+  Conservative on Severe: P=0.93, R=0.83 (some Severe called Very Poor)
+
+Bottom Left — ANN Regression: Actual vs Predicted AQI:
+  R²=0.9862  MAE=10.68  RMSE=13.34
+  Points cluster tightly along the perfect-fit diagonal across full AQI range.
+
+Bottom Right — ANN Regression: Residual Plot:
+  Residuals randomly distributed around 0; bounded within ±40 AQI.
+  No fan/trumpet shape — uniform accuracy across the full AQI scale.
+
+
+================================================================================
+TABLE 8. CROSS-MODEL CONFUSION MATRIX SUMMARY
+================================================================================
+
+  AQI Category  Shallow Recall  Deep Recall  Regularized Recall  Key Observation
+  ------------  --------------  -----------  ------------------  ----------------------------------------
+  Good          0.27            0.60         0.80                Minority class (biggest gap between models)
+  Moderate      0.88            0.90         0.89                High support (all models strong)
+  Poor          0.95            0.94         0.98                Highest support (consistently excellent)
+  Satisfactory  0.81            0.84         0.78                Boundary class (moderate difficulty)
+  Severe        0.90            0.93         0.70                Regularized trades off Severe for Good
+  Very Poor     0.89            0.91         0.89                Consistent across all models
+
+
+================================================================================
+TABLE 9. ANN — DEEP INPUT FEATURE WEIGHTS
+================================================================================
+
+  Rank  Feature              Weight Magnitude  Physical Interpretation
+  ----  -------------------  ----------------  --------------------------------------------------
+  1     PM10                 Highest (~22)     Coarse particulates — primary AQI driver in Delhi
+  2     PM2.5                Very high (~21)   Fine particulates — closely correlated with PM10
+  3     CO                   High (~18)        Carbon monoxide from vehicular combustion
+  4     NOx                  High (~17)        Nitrogen oxides — key combustion byproduct
+  5     Xylene               Medium (~14)      Industrial/vehicular volatile organic compound
+  6     SO2                  Medium (~12)      Sulphur dioxide from thermal power plants
+  7–12  NH3, Toluene, NO,    Lower (~5–10)     Secondary contributors; O3 lowest as Delhi is
+        NO2, Benzene, O3                       combustion-driven, not photochemical
+
+Note: The physical accuracy of PM10 and PM2.5 as leading pollutants is correct,
+as particulate matter is the primary driver of AQI levels in Delhi, especially
+in wintertime due to temperature inversions. This was not told to the machine
+learning algorithm — the network discovered it independently from data.
+
+
+================================================================================
+PRECISION & RECALL PER CLASS (ANN Deep)
+================================================================================
+
+What it shows: The two components of F1 — Precision and Recall — displayed
+separately for the best model (ANN Deep) across all six categories. This reveals
+the nature of errors, not just their quantity.
+
+  Precision: Of all days the model predicted as Class X, what fraction were
+             actually Class X? (Avoids false alarms)
+
+  Recall:    Of all days that were actually Class X, what fraction did the model
+             find? (Avoids missing real cases)
+
+Public Health Significance of the Severe error: The classifier accurately
+predicts Severe conditions 93% of the time, but misses 17% of actual Severe
+days. In these cases, the classifier labels those days as Very Poor. This is the
+conservative approach because issuing a Very Poor warning on a Severe day is
+less risky than issuing a Good warning on a Severe day.
+
+
+--------------------------------------------------------------------------------
+TABLE 10. Precision & Recall Per Class (ANN Deep)
+--------------------------------------------------------------------------------
+
+  Category      Precision  Recall  Interpretation
+  ------------  ---------  ------  ---------------------------------------------------------
+  Good          ~0.82      ~0.60   Model is cautious; rarely false-alarms Good,
+                                   but misses some real Good days
+  Moderate      ~0.90      ~0.90   Perfectly balanced; high support class
+  Poor          ~0.90      ~0.94   Slightly higher recall; model is thorough for
+                                   this dominant class
+  Satisfactory  ~0.80      ~0.84   Balanced; occasional Moderate days labelled Satisfactory
+  Severe        ~0.93      ~0.83   Conservative; few false alarms; some Severe days
+                                   called Very Poor (safer error)
+  Very Poor     ~0.90      ~0.91   Consistently excellent; well-supported and well-learned
+
+
+================================================================================
+TABLE 11. FULL ANN CLASSIFICATION PERFORMANCE — ALL MODELS, ALL METRICS
+================================================================================
+
+  Model              Val Acc  Test Acc  Macro F1  Wtd F1  CV Acc  Epochs
+  -----------------  -------  --------  --------  ------  ------  ------
+  ANN — Shallow      0.8245   0.8686    0.7972    0.8664  0.8558  60
+  ANN — Deep         0.8446   0.8923    0.8640    0.8924  0.8616  65
+  ANN — Regularized  0.8208   0.8741    0.8441    0.8740  0.8499  68
+
+
+================================================================================
+TABLE 13. ARCHITECTURE SELECTION GUIDE BY USE CASE
+================================================================================
+
+  Use Case / Priority               Preferred Architecture  Reason
+  --------------------------------  ----------------------  ------------------------------------------
+  Best overall AQI prediction       ANN — Deep              Highest on all 5 metrics; best balance
+                                                            across all 6 categories
+  Detecting 'Good' air quality days ANN — Regularized       Recall 0.80 for Good class (vs 0.60 for
+                                                            Deep); Tanh + α=0.01 preserves minority
+                                                            sensitivity
+  Lightweight / fast deployment     ANN — Shallow           Fewest parameters (64→32); acceptable
+                                                            86.86% accuracy if speed is priority
+  Exact AQI number prediction       ANN Regressor           R²=0.9862, MAE=10.68 — continuous value
+                                                            output, not category
+
+
+================================================================================
+SUMMARY
+================================================================================
+
+  Classification Winner : ANN — Deep
+    → Test Accuracy = 0.8923 | Macro F1 = 0.8640 | Weighted F1 = 0.8924
+    → CV Accuracy = 0.8616 | Val Accuracy = 0.8446
+    → Best balance across all six CPCB AQI classes
+
+  Regression Result     : ANN Regressor (256→128→64→32)
+    → R² = 0.9862 | MAE = 10.68 | RMSE = 13.34 (75 epochs)
+    → Residuals bounded within ±40 AQI; no systematic bias
+
+  Key Physical Validation:
+    The ANN Deep model independently ranked PM10 and PM2.5 as the highest-
+    weight features — consistent with established atmospheric science on
+    Delhi's pollution profile — without being told this during training.
+
+================================================================================
+END OF DEEP LEARNING SECTION
+================================================================================
