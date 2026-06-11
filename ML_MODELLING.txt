@@ -1,0 +1,228 @@
+================================================================================
+  DELHI AQI PROJECT — MACHINE LEARNING MODELLING
+================================================================================
+
+
+================================================================================
+I.  REGRESSION MODELS
+================================================================================
+
+The comparative analysis of Ridge Regression, Random Forest, Gradient Boosting,
+and XGBoost revealed significant differences in model behavior and predictive
+accuracy for AQI estimation in regression modeling.
+
+The performance of the regression models was evaluated, and the results are
+summarized as follows:
+
+  • Ridge Regression achieved the highest performance with an R² score of
+    0.9859, along with a low MAE of 10.86 and RMSE of 13.51. The
+    cross-validation score (CV R² = 0.9868) further confirms its strong
+    generalization ability. Performs well because it handles multicollinearity
+    using regularization. Suitable when data has linear relationships.
+
+  • Random Forest produced an R² of 0.9833, with MAE = 11.61 and RMSE = 14.68,
+    indicating slightly lower accuracy compared to Ridge Regression. Captures
+    non-linear relationships by combining multiple decision trees (ensemble
+    learning).
+
+  • Gradient Boosting demonstrated competitive performance with an R² of 0.9844,
+    MAE = 11.40, and RMSE = 14.20, showing improved accuracy over Random Forest.
+    Sequentially improving errors from previous models, focusing on hard-to-
+    predict data points.
+
+  • XGBoost achieved an R² of 0.9847, with MAE = 11.25 and RMSE = 14.08.
+    Advanced boosting with regularization and optimization.
+
+Overall, all models exhibited strong predictive performance, with Ridge
+Regression slightly outperforming other models in terms of accuracy and error
+minimization. On the other hand, ensemble-based models such as Random Forest,
+Gradient Boosting, and XGBoost also demonstrated strong performance. These
+models can capture complex, non-linear relationships in the data.
+
+
+--------------------------------------------------------------------------------
+Table 2. Performance Metrics — Regression
+--------------------------------------------------------------------------------
+
+  MODEL               R²      Adj R²   MAE    RMSE    CV R²
+  ----------------    ------  ------   -----  -----   ------
+  Ridge Regression    0.9859  0.9856   10.86  13.51   0.9868  ← BEST
+  Random Forest       0.9833  0.9830   11.61  14.68   0.9836
+  Gradient Boosting   0.9844  0.9841   11.40  14.20   0.9845
+  XGBoost             0.9847  0.9843   11.25  14.08   0.9850
+
+
+--------------------------------------------------------------------------------
+Fig 4.4.1a  Performance Metrics (Regression)
+--------------------------------------------------------------------------------
+
+Top Row — Bar charts comparing all four models on each metric:
+  R² Score (Higher is Better):
+    Ridge Regression  = 0.9859
+    Random Forest     = 0.9833
+    Gradient Boosting = 0.9844
+    XGBoost           = 0.9847
+
+  Adjusted R² (Higher is Better):
+    Ridge Regression  = 0.9856
+    Random Forest     = 0.9830
+    Gradient Boosting = 0.9841
+    XGBoost           = 0.9844 (shown as 0.9844)
+
+  MAE — Mean Absolute Error (Lower is Better):
+    Ridge Regression  = 10.86
+    Random Forest     = 11.61
+    Gradient Boosting = 11.40
+    XGBoost           = 11.25 (shown as 11.75 in figure label)
+
+  RMSE (Lower is Better):
+    Ridge Regression  = 13.51
+    Random Forest     = 14.68
+    Gradient Boosting = 14.20
+    XGBoost           = 14.08 (shown as 14.00 in figure label)
+
+Bottom Row — Individual Actual vs Predicted scatter plots per model:
+  Ridge Regression    R² = 0.9859   Adj R² = 0.9856
+  Random Forest       R² = 0.9833   Adj R² = 0.9830
+  Gradient Boosting   R² = 0.9844   Adj R² = 0.9841
+  XGBoost             R² = 0.9847   Adj R² = 0.9844
+
+XGBoost is the best-performing classifier across all metrics — Accuracy (0.889),
+F1 Macro (0.865), F1 Weighted (0.889), and CV Accuracy (0.857) — followed
+closely by Gradient Boosting. Logistic Regression outperforms Random Forest
+despite being a simpler linear model, consistent with the pattern seen in
+regression results.
+
+
+================================================================================
+II.  CLASSIFICATION MODELS
+================================================================================
+
+Comparing models such as Logistic Regression, Random Forest, Gradient Boosting,
+and XGBoost revealed differences in performance and prediction accuracy across
+AQI categories. The performance of these models was analyzed in terms of
+Accuracy, Macro F1 Score, Weighted F1 Score, and cross-validated accuracy. A
+confusion matrix was also created for all models to evaluate their performance
+in predicting each AQI category specified by CPCB: Good, Satisfactory,
+Moderate, Poor, Very Poor, and Severe. The results are summarized as follows:
+
+  • Logistic Regression achieved an accuracy of 0.8728, with a Macro F1 score
+    of 0.8418 and a cross-validation accuracy of 0.8569, reflecting solid
+    baseline performance for a linear classifier.
+
+  • Random Forest produced an accuracy of 0.8632, with Macro F1 = 0.8121 and
+    CV Accuracy = 0.8481. This is attributable to its ability to capture
+    non-linear class boundaries by combining multiple decision trees through
+    ensemble learning, though the marginal underperformance suggests the added
+    complexity did not translate into gains for this dataset.
+
+  • Gradient Boosting demonstrated competitive performance, with an accuracy of
+    0.8851, Macro F1 of 0.8537, and CV Accuracy of 0.8525, improving on both
+    Logistic Regression and Random Forest.
+
+  • XGBoost achieved the highest classification performance, with an accuracy of
+    0.8892, Macro F1 of 0.8654, and CV Accuracy of 0.8566, outperforming all
+    other models.
+
+
+--------------------------------------------------------------------------------
+Fig 4.4.1b  Performance Metrics (Classification)
+--------------------------------------------------------------------------------
+
+Top Row — Bar charts comparing all four models:
+  Test Accuracy:
+    Logistic Regression = 0.873
+    Random Forest       = 0.863
+    Gradient Boosting   = 0.885
+    XGBoost             = 0.889
+
+  F1 Score (Macro):
+    Logistic Regression = 0.857 (approx)
+    Random Forest       = 0.857 (approx)
+    Gradient Boosting   = 0.854
+    XGBoost             = 0.865
+
+  5-Fold CV Accuracy:
+    Logistic Regression = 0.857
+    Random Forest       = 0.848
+    Gradient Boosting   = 0.853
+    XGBoost             = 0.857
+
+  Summary Table (from figure):
+    Logistic Regression  Accuracy=0.8728  F1=0.8121  CV=0.8481
+    Random Forest        Accuracy=0.8632  F1=0.8121  CV=0.8481
+    Gradient Boosting    Accuracy=0.8851  F1=—       CV=—
+    XGBoost              Accuracy=0.8892  F1=0.8654  CV=0.8566
+
+Middle Row — Confusion Matrices for all four models:
+  Logistic Regression, Random Forest, Gradient Boosting, XGBoost
+  (6 classes: Good, Satisfactory, Moderate, Poor, Very Poor, Severe)
+
+Bottom Row:
+  All Models × All Metrics grouped bar chart
+  Feature Importances (RF Classification):
+    PM2.5 and PM10 are highest (~0.25 each), followed by CO, NOx, NO,
+    Benzene, NO2, Toluene, Xylene, O3, NH3, SO2
+
+
+--------------------------------------------------------------------------------
+Table 3. Classification Results — AQI Bucket Prediction
+--------------------------------------------------------------------------------
+
+                      LOGISTIC REGRESSION              RANDOM FOREST
+  Class         Precision  Recall  F1-Score  Support | Precision  Recall  F1-Score  Support
+  ------------  ---------  ------  --------  ------- | ---------  ------  --------  -------
+  Good             0.92     0.55     0.69       20   |    0.91     0.50     0.65       20
+  Moderate         0.87     0.92     0.89      259   |    0.86     0.94     0.90      259
+  Poor             0.89     0.88     0.89      135   |    0.93     0.84     0.88      135
+  Satisfactory     0.77     0.79     0.78      121   |    0.79     0.74     0.77      121
+  Severe           0.97     0.82     0.89       40   |    0.93     0.68     0.78       40
+  Very Poor        0.91     0.92     0.91      156   |    0.86     0.94     0.90      156
+
+
+                      GRADIENT BOOSTING                XGBOOST
+  Class         Precision  Recall  F1-Score  Support | Precision  Recall  F1-Score  Support
+  ------------  ---------  ------  --------  ------- | ---------  ------  --------  -------
+  Good             0.85     0.55     0.67       20   |    0.78     0.70     0.74       20
+  Moderate         0.90     0.91     0.91      259   |    0.90     0.92     0.91      259
+  Poor             0.90     0.90     0.90      135   |    0.89     0.92     0.90      135
+  Satisfactory     0.77     0.81     0.79      121   |    0.81     0.79     0.80      121
+  Severe           0.95     0.93     0.94       40   |    0.95     0.90     0.92       40
+  Very Poor        0.92     0.92     0.92      156   |    0.93     0.90     0.92      156
+
+
+--------------------------------------------------------------------------------
+Table 4. Regression Summary — AQI Value Prediction
+--------------------------------------------------------------------------------
+
+  Model               R²      Adjusted R²   MAE    RMSE    CV R²
+  ----------------    ------  -----------   -----  -----   ------
+  Ridge Regression    0.9859    0.9856      10.86  13.51   0.9868
+  Random Forest       0.9833    0.9830      11.61  14.68   0.9836
+  Gradient Boosting   0.9844    0.9841      11.40  14.20   0.9845
+  XGBoost             0.9847    0.9843      11.25  14.08   0.9850
+
+
+================================================================================
+SUMMARY
+================================================================================
+
+Regression Winner  : Ridge Regression
+  → Best R² (0.9859), lowest MAE (10.86) and RMSE (13.51), highest CV R² (0.9868)
+  → Linear model wins because PM2.5 and PM10 have near-perfect linear
+    relationships with AQI (r > 0.97)
+
+Classification Winner : XGBoost
+  → Best Accuracy (0.8892), F1 Macro (0.8654), CV Accuracy (0.8566)
+  → Advanced gradient boosting with regularization handles class imbalance
+    (Good class = only 101 samples) better than other models
+
+Key Observation:
+  In both regression and classification tasks, simpler or well-regularized
+  models (Ridge, XGBoost with L2) outperform purely tree-based ensembles
+  (Random Forest), confirming that the linear structure of PM2.5/PM10 → AQI
+  relationships dominates the feature space.
+
+================================================================================
+END OF ML MODELLING SECTION
+================================================================================
