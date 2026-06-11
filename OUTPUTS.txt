@@ -1,0 +1,448 @@
+================================================================================
+  DELHI AQI PROJECT — OUTPUT FIGURES DESCRIPTION
+  All generated plots, charts, and result visualizations
+================================================================================
+
+This file describes all 16 output figures produced by this project.
+Figures are organized by analysis phase: EDA → ML Models → ANN → Forecasting.
+
+Save your figures in the results/figures/ folder and name them as listed below.
+
+
+--------------------------------------------------------------------------------
+PHASE 1: EXPLORATORY DATA ANALYSIS (EDA)
+--------------------------------------------------------------------------------
+
+OUTPUT 01 — output_1.png
+Title    : EDA — Figure 1: Dataset Overview & Statistical Summary
+Contents :
+  - Daily AQI Time Series (2015–2024) coloured by CPCB category
+    with 30-day rolling mean and COVID Lockdown annotation (Apr–Jun 2020)
+  - AQI Distribution KDE plot (Mean=209, Median=178, Q3=307)
+  - AQI Distribution by Year — box plots for each year (2015–2024)
+  - AQI Category Pie Chart (Moderate 35.4%, Very Poor 21.4%, Poor 18.5%,
+    Satisfactory 16.5%, Severe 5.5%, Good 2.8%)
+  - Descriptive Statistics Summary table for all features
+    (PM2.5, PM10, NO2, CO, SO2, O3, AQI, Temperature, Humidity, WindSpeed)
+
+Key Numbers:
+  AQI Mean=208.9 | Median=177.5 | Max=499 | Min=12
+  PM2.5 Mean=149.8 ug/m3 | PM10 Mean=219.4 ug/m3
+
+
+--------------------------------------------------------------------------------
+
+OUTPUT 02 — output_2.png
+Title    : DELHI AQI — Exploratory Data Analysis (Overview Dashboard)
+Contents :
+  - AQI Category Distribution bar chart
+    (Good=101, Satisfactory=602, Moderate=1294, Poor=675, Very Poor=781, Severe=200)
+  - AQI Value Distribution histogram (Mean=209, Median=178)
+  - Pollutant Correlation Heatmap (PM2.5, PM10, NO2, CO, SO2, O3)
+  - PM2.5 Distribution by AQI Category — violin plot
+  - Yearly AQI (2015–2024) time series area chart
+  - Average Pollutant Levels bar chart
+    (PM10 highest ~219, PM2.5 ~150, NO2 ~46, O3 ~20, SO2 ~13, CO ~2.9)
+
+Key Observation:
+  PM10 and PM2.5 dominate all other pollutants by a wide margin.
+  Moderate is the single most common AQI category (1,294 days out of 3,653).
+
+
+--------------------------------------------------------------------------------
+
+OUTPUT 03 — output_3.png
+Title    : EDA — Figure 2: Individual Pollutant Distributions & Box Plots
+Contents :
+  12-panel grid — one histogram + KDE per pollutant:
+  PM2.5, PM10, NO, NO2, NOx, NH3, CO, SO2, O3, Benzene, Toluene, Xylene
+
+  Each panel shows: Mean, Std, Skewness, red dashed Mean line, blue dotted Median
+
+  Summary of pollutant statistics:
+    PM2.5   Mean=149.8  Std=84.2   Skew=0.41
+    PM10    Mean=219.4  Std=123.8  Skew=0.41
+    NO      Mean=35.9   Std=26.9   Skew=0.53
+    NO2     Mean=46.4   Std=27.8   Skew=0.36
+    NOx     Mean=82.4   Std=52.9   Skew=0.47
+    NH3     Mean=16.9   Std=10.6   Skew=0.40
+    CO      Mean=2.9    Std=2.1    Skew=0.54
+    SO2     Mean=12.8   Std=8.2    Skew=0.34
+    O3      Mean=20.0   Std=10.1   Skew=0.26
+    Benzene Mean=1.7    Std=1.0    Skew=0.41
+    Toluene Mean=5.3    Std=3.2    Skew=0.43
+    Xylene  Mean=2.5    Std=1.6    Skew=0.39
+
+Key Observation:
+  All pollutants show positive (right) skew, reflecting winter pollution spikes.
+  Bimodal distributions visible in PM2.5, PM10, NOx — confirming seasonal effects.
+
+
+--------------------------------------------------------------------------------
+
+OUTPUT 04 — output_4.png
+Title    : EDA — Figure 3: Temporal Trends & Patterns
+Contents :
+  - Yearly Average AQI + Trend Line
+    (slope = -3.9 AQI/yr; values: 232, 228, 220, 217, 209, 175, 254, 250, 248, 236, 196)
+  - Monthly AQI Profile — Each Year (2015–2024) with Grand Mean overlay
+    (U-shaped curve: peaks Nov–Jan, bottoms Aug–Sep; 2020 pink line anomalously low)
+  - Quarterly AQI Heatmap (Year x Quarter)
+    (Q4 consistently red ~320–394; Q3 consistently green ~80–110)
+  - AQI Distribution by Season — box plots
+    (Winter mu=312, Spring mu=157, Monsoon mu=99, Autumn mu=354)
+  - Rolling Moving Averages (7d / 30d / 90d) with CPCB Threshold lines
+    (90-day MA peaks ~350–380 in Dec–Jan, bottoms ~80–100 in Aug–Sep)
+
+Key Observations:
+  - Annual trend is slightly declining (-3.9 AQI/yr overall) but with high variance.
+  - 2020 recorded the lowest annual average (175) due to COVID lockdown.
+  - Autumn (Oct–Nov) is actually the worst season by mean AQI (mu=354), not Winter,
+    because November stubble burning spikes pull the average up.
+  - Q2 (Apr–Jun) is consistently the cleanest quarter.
+
+
+--------------------------------------------------------------------------------
+
+OUTPUT 05 — output_5.png
+Title    : EDA — Figure 4: Correlations & Pollutant Relationships
+Contents :
+  - Full Correlation Matrix heatmap (all 16 features including weather)
+  - Pearson Correlation with AQI — horizontal bar chart
+    Top positive:  PM2.5(0.976), PM10(0.974), CO(0.955), NOx(0.955), NO(0.937),
+                   Benzene(0.917), NO2(0.908), Toluene(0.889), Xylene(0.870),
+                   NH3(0.837), SO2(0.817), O3(0.456)
+    Negative:      WindSpeed(-0.724), Temperature(-0.749), Humidity(-0.067)
+  - Scatter plot: PM2.5 vs AQI (r=0.976) — coloured by AQI category
+  - Scatter plot: PM10 vs AQI (r=0.974)
+  - Scatter plot: Wind Speed vs AQI (r=-0.724)
+
+Key Observation:
+  Near-perfect linear relationships between PM2.5/PM10 and AQI confirm why
+  Ridge Regression (a linear model) outperforms tree-based ensembles.
+  Wind speed > 12 km/h virtually guarantees AQI < 200.
+
+
+--------------------------------------------------------------------------------
+
+OUTPUT 06 — output_6.png
+Title    : KEY EDA RESULTS — Summary Dashboard (Dark Theme)
+Contents :
+  Single-page summary card with:
+  - Dataset stats: 3,653 days | 24 features | 2015–2024
+  - AQI Summary table:
+      Mean=208.9 | Median=177.5
+      Max=499.0 on 2015-11-09
+      Min=12.0  on 2019-08-10
+      Worst Month: November (avg AQI 407.7)
+      Best Month:  August   (avg AQI 83.6)
+  - Top AQI Correlations table:
+      PM2.5 r=0.9763, PM10 r=0.9744, CO r=0.9549, NOx r=0.9547, NO r=0.9369
+  - COVID Lockdown highlight:
+      Avg AQI Apr-Jun 2020 = 55.0 vs baseline 126.8 (56.6% reduction)
+
+Purpose: Ready-to-use summary card for presentations and reports.
+
+
+--------------------------------------------------------------------------------
+PHASE 2: MACHINE LEARNING MODELS
+--------------------------------------------------------------------------------
+
+OUTPUT 07 — output_7.png
+Title    : Actual vs Predicted AQI (All Regression Models)
+Contents :
+  Combined scatter plot with all four models overlaid:
+    Ridge Regression (blue), Random Forest (orange),
+    Gradient Boosting (green), XGBoost (red/pink)
+  Perfect prediction dashed diagonal line for reference.
+  AQI range 0–500 fully covered.
+
+Key Observation:
+  All four models cluster tightly along the diagonal.
+  No model shows systematic over- or under-prediction.
+  Slight widening of scatter at AQI 400–500 (Severe range, fewer training samples).
+
+
+--------------------------------------------------------------------------------
+
+OUTPUT 08 — output_8.png
+Title    : DELHI AQI — Regression Results (Predicting AQI Value)
+Contents :
+  Top row — 4 bar charts comparing models on each metric:
+    R2 Score:      Ridge=0.9859, XGB=0.9847, GB=0.9844, RF=0.9833
+    Adjusted R2:   Ridge=0.9856, XGB=0.9844, GB=0.9841, RF=0.9830
+    MAE:           Ridge=10.86,  XGB=11.25,  GB=11.40,  RF=11.61
+    RMSE:          Ridge=13.51,  XGB=14.08,  GB=14.20,  RF=14.68
+
+  Bottom row — individual Actual vs Predicted scatter plots per model:
+    Ridge Regression   R2=0.9859  Adj R2=0.9856
+    Random Forest      R2=0.9833  Adj R2=0.9830
+    Gradient Boosting  R2=0.9844  Adj R2=0.9841
+    XGBoost            R2=0.9847  Adj R2=0.9844
+
+Winner: Ridge Regression — best on all four metrics.
+
+
+--------------------------------------------------------------------------------
+
+OUTPUT 09 — output_9.png
+Title    : DELHI AQI — Classification Results (AQI Bucket Prediction)
+Contents :
+  Top row:
+    Test Accuracy bar chart:    LR=0.873, RF=0.863, GB=0.885, XGB=0.889
+    F1 Score (Macro) bar chart: LR=0.842, RF=0.812, GB=0.854, XGB=0.865
+    5-Fold CV Accuracy:         LR=0.857, RF=0.848, GB=0.853, XGB=0.857
+    Summary table (all metrics for all 4 models)
+
+  Middle row:
+    Confusion Matrices for all 4 models (Logistic Regression, Random Forest,
+    Gradient Boosting, XGBoost)
+    XGBoost per-class F1 bar chart:
+      Very Poor=0.919, Severe=0.923, Poor=0.902, Moderate=0.912,
+      Satisfactory=0.800, Good=0.737
+
+  Bottom row:
+    All Models x All Metrics grouped bar chart
+    Feature Importances (Random Forest Classification):
+      PM2.5 and PM10 highest (~0.25 each), followed by CO, NOx, NO,
+      Benzene, NO2, Toluene, Xylene, O3, NH3, SO2
+
+Winner: XGBoost — highest on Accuracy (0.889), F1 Macro (0.865), and CV Accuracy.
+
+Key Observation:
+  Satisfactory class is hardest to classify for all models (overlaps with
+  Moderate and Good at boundary AQI values 51–100).
+  Good class has lowest F1 (0.737) due to only 101 training samples.
+
+
+--------------------------------------------------------------------------------
+PHASE 3: DEEP LEARNING (ANN)
+--------------------------------------------------------------------------------
+
+OUTPUT 10 — output_10.png
+Title    : DELHI AQI — ANN Architecture & Training Dynamics
+Contents :
+  - ANN Architecture diagram:
+    Input(12) -> H1(256) -> H2(128) -> H3(64) -> H4(32) -> Output(6)
+    Annotation: ReLU activation, Adam optimizer, L2 reg (alpha=0.0005)
+
+  - Training Loss Curves (all 3 models):
+    All start ~1.5 cross-entropy; Deep ends lowest (~0.20) after 65 epochs.
+    Smooth downward curves — no instability or overfitting.
+
+  - Validation Accuracy During Training:
+    All models reach 0.80+ within 10 epochs.
+    ANN Deep consistently highest at 0.87–0.90 band.
+
+  - Training Summary table:
+    ANN Shallow     Epochs=60  Val=0.8245  Test=0.8686  F1=0.7972  CV=0.8558
+    ANN Deep        Epochs=65  Val=0.8446  Test=0.8923  F1=0.8640  CV=0.8616
+    ANN Regularized Epochs=68  Val=0.8208  Test=0.8741  F1=0.8441  CV=0.8499
+
+  - All ANN Models x All Metrics grouped bar chart
+  - ANN Regressor Loss convergence:
+    MSE crashes from ~27,000 to near 0 within first 8 epochs.
+    Final R2=0.9862 (stable from ~epoch 10 onward).
+
+Winner: ANN Deep — leads every metric without exception.
+
+
+--------------------------------------------------------------------------------
+
+OUTPUT 11 — output_11.png
+Title    : Delhi AQI Forecasting — All Methods Monthly Avg (2015–2027) [5-panel]
+Contents :
+  5 individual forecast panels (SMA, SES, TES/Holt-Winters, ARIMA, ML Regression):
+  Each shows: Historical (grey), Actual Test 2024 (green), Predicted (dashed),
+              Forecast 2025–2027 (coloured line)
+
+  SMA (6-month)           R2 = -0.670  Flat forecast ~260; misses seasonality
+  SES (alpha=0.90)        R2 =  0.488  Flat ~330; more responsive but no cycles
+  TES / Holt-Winters      R2 =  0.994  Captures full seasonal cycle 2025–2027
+  ARIMA (3,1,2)           R2 = -0.540  Trends upward ~300; no seasonal swings
+  ML Regression Poly+FFT  R2 =  0.980  Realistic cyclical forecast 2025–2027
+
+Key Observation:
+  TES and ML Regression are the only methods that reproduce the annual
+  winter-peak / monsoon-trough cycle in the forecast horizon.
+
+
+--------------------------------------------------------------------------------
+
+OUTPUT 12 — output_12.png
+Title    : Delhi AQI Forecasting — All Methods Monthly Avg (2015–2027) [7-panel]
+Contents :
+  Extended 7-panel version including Double Exponential Smoothing and
+  Seasonal Decomposition + Trend method:
+
+  SMA (6-month)              R2 = -0.670   Flat ~260; no seasonality
+  SES (alpha=0.90)           R2 =  0.488   Flat ~330; no trend/season
+  DES / Holt's Linear        R2 = -6.740   Diverges — linear trend extrapolation
+                                            shoots upward, unsuitable for AQI
+  TES / Holt-Winters         R2 =  0.994   Best classical method; full cycles
+  ARIMA (3,1,2)              R2 = -0.540   Converges to flat ~300
+  Seasonal Decomp + Trend    R2 =  0.974   Good seasonal structure, slight damping
+  ML Regression Poly+Fourier R2 =  0.980   Best ML method; full cycles + trend
+
+Key Observation:
+  DES (Holt's Linear) fails badly on AQI data — its linear trend assumption
+  extrapolates to unrealistic values. AQI is cyclical, not linearly growing.
+  Seasonal Decomposition + Trend is a strong classical alternative to TES.
+
+
+--------------------------------------------------------------------------------
+
+OUTPUT 13 — output_13.png  (Terminal Output Screenshot)
+Title    : Classification Reports — Best Model & Final Summary
+Contents :
+  ANN Deep (12->256->128->64->32->6) Classification Report:
+    Class         Precision  Recall  F1    Support
+    Good          0.82       0.60    0.69    15
+    Moderate      0.92       0.90    0.91   194
+    Poor          0.90       0.94    0.92   101
+    Satisfactory  0.77       0.84    0.80    91
+    Severe        0.93       0.93    0.93    30
+    Very Poor     0.96       0.91    0.93   117
+    -----------------------------------------------
+    Accuracy                         0.89   548
+    Macro avg     0.88       0.85    0.86   548
+    Weighted avg  0.89       0.89    0.89   548
+
+  Final Summary printed to console:
+    ANN Classification:
+      Shallow     (12->64->32->6)        Acc=0.8686  F1=0.7972  CV=0.8558
+      Deep        (12->256->128->64->32) Acc=0.8923  F1=0.8640  CV=0.8616
+      Regularized (12->128->64->32->6)   Acc=0.8741  F1=0.8441  CV=0.8499
+    ANN Regression:
+      Deep ANN (256->128->64->32)        R2=0.9862   MAE=10.68  RMSE=13.34
+
+
+--------------------------------------------------------------------------------
+
+OUTPUT 14 — output_14.png
+Title    : DELHI AQI — ANN Classification Results
+Contents :
+  Top row:
+    Confusion Matrix — ANN Shallow (12->64->32->6):
+      Good recall only 0.27; 0.73 misclassified as Satisfactory
+    Confusion Matrix — ANN Deep (12->256->128->64->32->6):
+      Good recall improves to 0.60 (biggest single gain in the study)
+      Severe recall = 0.93
+    Confusion Matrix — ANN Regularized (12->128->64->32->6):
+      Good recall best of all at 0.80 (strong L2 penalty preserves minority class)
+      Severe drops to 0.70 (trade-off cost of regularization)
+    Input Weight Magnitude — ANN Deep:
+      PM10 highest (~22), PM2.5 (~21), CO (~18), NOx (~17), Xylene (~14),
+      SO2 (~12); O3 lowest — matches physical understanding of Delhi's pollution
+
+  Middle row:
+    Per-Class F1 Score (All ANN Models):
+      Good is the hardest class — shallow=0.37, deep=0.65, regularized=0.70
+      Moderate/Poor/Very Poor all 0.88–0.92 across all models
+    Precision & Recall per Class (ANN Deep):
+      Best balanced: Moderate (P=0.90, R=0.90), Very Poor (P=0.90, R=0.91)
+      Cautious on Good: P=0.82, R=0.60 (misses some clean days, safe error)
+      Conservative on Severe: P=0.93, R=0.83 (some Severe called Very Poor)
+
+  Bottom row:
+    ANN Regression — Actual vs Predicted scatter plot (R2=0.9862, MAE=10.68)
+    ANN Regression — Residual Plot:
+      Residuals randomly distributed around 0; bounded within +/-40 AQI
+      No fan/trumpet shape; uniform accuracy across the full AQI scale
+
+
+--------------------------------------------------------------------------------
+
+OUTPUT 15 — output_15.png
+Title    : Dataset Fix: Official CPCB AQI Scale Applied
+Contents :
+  Side-by-side bar charts showing AQI bucket distribution:
+  BEFORE Fix (random/incorrect labels) vs AFTER Fix (official CPCB scale)
+  Official CPCB AQI Scale legend on the right
+
+  After Fix distribution:
+    Good=101, Satisfactory=602, Moderate=1294, Poor=675, Very Poor=781, Severe=200
+
+Purpose:
+  Documents a data preprocessing step where the original AQI_Bucket labels
+  in the raw Kaggle dataset were re-assigned using the official CPCB breakpoints
+  (0–50 Good, 51–100 Satisfactory, 101–200 Moderate, 201–300 Poor,
+  301–400 Very Poor, 401–500 Severe) to ensure label correctness before
+  any classification modelling.
+
+Note:
+  This is an important data quality step. The raw dataset had approximately
+  uniform category counts, which is unrealistic for Delhi. After applying
+  official breakpoints, Moderate becomes the dominant class (as expected
+  from Delhi's actual air quality profile).
+
+
+--------------------------------------------------------------------------------
+
+OUTPUT 16 — output_16.png
+Title    : Delhi AQI Forecasting — All Methods (2015–2027) [Clean Version]
+Contents :
+  5-panel clean version of the forecasting comparison:
+  SMA (6-month), SES, TES/Holt-Winters, ARIMA (3,1,2), ML Regression Poly+Fourier
+
+  Each panel shows Train (black), Actual Test 2024 (green),
+  Predicted (dashed), Forecast 2025–2027 (coloured line).
+
+  ML Regression panel includes metrics: MAE=12.32, RMSE=14.3, R2=0.98
+
+  Vertical red dotted line marks the train/test split boundary (Jan 2025).
+
+Key Visual Takeaways:
+  SMA    : Flat, lagged forecast — no seasonal cycles
+  SES    : Flat at ~330 — reactive to last value but no cycles
+  TES    : Full seasonal cycles reproduced correctly
+  ARIMA  : Flat trend ~250-300; understates seasonal swings
+  ML Reg : Full seasonal cycles with realistic amplitudes
+
+This figure directly answers Research Question 3 — seasonal models (TES,
+ML Regression) vastly outperform non-seasonal ones (SMA, SES, ARIMA) for
+Delhi AQI forecasting.
+
+
+================================================================================
+FIGURE INDEX SUMMARY
+================================================================================
+
+No.  Filename            Phase         Description
+---  ------------------  ------------  -----------------------------------------
+01   output_1.png        EDA           Dataset overview, time series, stats table
+02   output_2.png        EDA           EDA dashboard (category dist, violin, bar)
+03   output_3.png        EDA           Individual pollutant distributions (12-panel)
+04   output_4.png        EDA           Temporal trends, quarterly heatmap, seasons
+05   output_5.png        EDA           Correlation matrix and scatter plots
+06   output_6.png        EDA           Key EDA results summary card (dark theme)
+07   output_7.png        ML Models     Combined actual vs predicted (all 4 models)
+08   output_8.png        ML Models     Regression metrics bar charts + scatter plots
+09   output_9.png        ML Models     Classification metrics, confusion matrices,
+                                       feature importances
+10   output_10.png       ANN           Architecture diagram, training curves,
+                                       validation accuracy, regressor loss
+11   output_11.png       Forecasting   5-method forecast comparison (2015–2027)
+12   output_12.png       Forecasting   7-method forecast comparison (includes DES,
+                                       Seasonal Decomp)
+13   output_13.png       ANN           Terminal output — classification report and
+                                       final summary
+14   output_14.png       ANN           ANN classification confusion matrices,
+                                       per-class F1, regression scatter, residuals
+15   output_15.png       Preprocessing Dataset fix — before vs after CPCB labels
+16   output_16.png       Forecasting   Clean 5-method forecast (final version)
+
+
+================================================================================
+NOTES
+================================================================================
+
+- All figures were generated using matplotlib and seaborn in Google Colab.
+- Figures 11 and 12 show the same forecasting comparison at different levels of
+  detail (5-method vs 7-method). Use Figure 16 for the cleanest presentation.
+- Figure 15 (dataset fix) is a preprocessing validation step — important for
+  reproducibility but not a modelling result.
+- Figure 13 is a screenshot of console output; it is included for completeness.
+- All model metrics are computed on a held-out test set (never seen during training).
+
+================================================================================

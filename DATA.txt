@@ -1,0 +1,259 @@
+================================================================================
+  DELHI AQI PROJECT — DATASET DESCRIPTION
+  UPDATED_DELHI_AQI_DATA.csv
+================================================================================
+
+This file documents the dataset used in the project:
+"Comparative Analysis of ML, Deep Learning, and Forecasting Models for AQI"
+
+
+--------------------------------------------------------------------------------
+FILE INFORMATION
+--------------------------------------------------------------------------------
+
+  Filename   : UPDATED_DELHI_AQI_DATA.csv
+  Rows       : 3,653  (one row per day)
+  Columns    : 20
+  Date Range : 01 January 2015 — 31 December 2024  (10 full years)
+  Missing    : 0  (fully imputed, no nulls)
+  City       : Delhi, India
+
+
+--------------------------------------------------------------------------------
+DATA SOURCES
+--------------------------------------------------------------------------------
+
+Original Source : Central Pollution Control Board (CPCB), India
+Obtained Via    : Kaggle
+
+  1. https://airquality.cpcb.gov.in/ccr/#/caaqm-dashboard/caaqm-landing/caaqm-data-availability
+  2. https://airquality.cpcb.gov.in/AQI_India/
+  3. https://www.aqi.in/dashboard/india/delhi/new-delhi  (live AQI reference)
+  4. https://drive.google.com/drive/u/0/folders/1qWhVRV45fq5ZZ2HICBZ2b-vtnveHBmdP
+
+
+--------------------------------------------------------------------------------
+PREPROCESSING APPLIED
+--------------------------------------------------------------------------------
+
+The raw dataset from CPCB/Kaggle underwent the following steps before use:
+
+  1. Missing value imputation
+     Any missing pollutant or weather values were filled using standard
+     imputation techniques (forward fill / interpolation) to ensure a
+     complete daily record across all 3,653 days.
+
+  2. AQI Bucket re-labelling (CPCB official scale)
+     The original Kaggle dataset contained incorrect or placeholder
+     AQI_Bucket labels. These were re-assigned using the official Indian
+     NAAQS / CPCB breakpoints:
+       AQI   0–50   -> Good
+       AQI  51–100  -> Satisfactory
+       AQI 101–200  -> Moderate
+       AQI 201–300  -> Poor
+       AQI 301–400  -> Very Poor
+       AQI 401–500  -> Severe
+     See output_15.png (results/figures/) for a before/after comparison.
+
+  3. Month column added
+     Integer month (1–12) extracted from Datetime for seasonal analysis.
+
+  4. Sorting
+     Rows sorted chronologically by Datetime ascending.
+
+
+--------------------------------------------------------------------------------
+COLUMN DESCRIPTIONS
+--------------------------------------------------------------------------------
+
+  Column          Type     Unit         Description
+  --------------- -------- ------------ ------------------------------------------
+  City            string   —            Always "Delhi" (single-city dataset)
+  Datetime        string   DD/MM/YYYY   Date of measurement
+  Month           int      1–12         Month extracted from Datetime
+  PM2.5           float    µg/m³        Fine particulate matter (diameter < 2.5µm)
+  PM10            float    µg/m³        Coarse particulate matter (diameter < 10µm)
+  NO              float    µg/m³        Nitric oxide concentration
+  NO2             float    µg/m³        Nitrogen dioxide concentration
+  NOx             float    µg/m³        Total nitrogen oxides (NO + NO2 + others)
+  NH3             float    µg/m³        Ammonia concentration
+  CO              float    mg/m³        Carbon monoxide (NOTE: different unit — mg/m³)
+  SO2             float    µg/m³        Sulphur dioxide concentration
+  O3              float    µg/m³        Ground-level ozone concentration
+  Benzene         float    µg/m³        Benzene (volatile organic compound)
+  Toluene         float    µg/m³        Toluene (volatile organic compound)
+  Xylene          float    µg/m³        Xylene (volatile organic compound)
+  Temperature_C   float    °C           Ambient temperature in Celsius
+  Humidity_pct    float    %            Relative humidity percentage
+  WindSpeed_kmh   float    km/h         Wind speed in kilometres per hour
+  AQI             float    0–500        Computed Air Quality Index (target variable)
+  AQI_Bucket      string   —            CPCB AQI category label (see above)
+
+
+--------------------------------------------------------------------------------
+DESCRIPTIVE STATISTICS
+--------------------------------------------------------------------------------
+
+  Feature        Count   Mean     Std      Min     25%      Median   75%      Max
+  -------------- ------- -------- -------- ------- -------- -------- -------- ------
+  PM2.5          3,653   149.84   84.18    5.00    80.10    131.80   220.10   395.30
+  PM10           3,653   219.43   123.76   10.00   114.00   190.10   324.30   589.50
+  NO             3,653    35.86    26.91    0.50    12.94     28.20    58.43   109.71
+  NO2            3,653    46.45    27.76    2.00    24.07     42.43    68.11   137.26
+  NOx            3,653    82.37    52.90    3.00    37.44     69.25   127.30   238.34
+  NH3            3,653    16.89    10.62    0.50     8.48     15.66    24.59    48.41
+  CO             3,653     2.86     2.14    0.10     1.04      2.18     4.73     8.48
+  SO2            3,653    12.76     8.18    0.50     6.14     12.03    18.95    40.22
+  O3             3,653    19.95    10.14    1.00    12.66     19.74    26.77    64.16
+  Benzene        3,653     1.68     0.98    0.10     0.91      1.50     2.46     4.73
+  Toluene        3,653     5.28     3.18    0.50     2.72      4.87     7.64    15.40
+  Xylene         3,653     2.52     1.55    0.10     1.30      2.33     3.66     7.94
+  Temperature_C  3,653    26.62     8.58    6.00    19.10     27.90    33.70    46.70
+  Humidity_pct   3,653    56.61    18.29   10.00    44.30     57.10    69.70   100.00
+  WindSpeed_kmh  3,653     9.34     3.47    1.00     6.70      9.30    12.00    19.50
+  AQI            3,653   208.92   114.40   12.00   112.00    177.50   307.10   499.00
+
+  Notable AQI Records:
+    Highest AQI : 499.0  on 09 November 2015  (Severe — post-Diwali + stubble burning)
+    Lowest AQI  :  12.0  on 10 August 2019    (Good — peak monsoon)
+
+
+--------------------------------------------------------------------------------
+AQI CATEGORY DISTRIBUTION
+--------------------------------------------------------------------------------
+
+  Category      AQI Range   Count   Proportion
+  ------------- ----------- ------- ----------
+  Moderate      101–200     1,294   35.4%
+  Very Poor     301–400       781   21.4%
+  Poor          201–300       675   18.5%
+  Satisfactory   51–100       602   16.5%
+  Severe        401–500       200    5.5%
+  Good            0–50        101    2.8%
+  ------------- ----------- ------- ----------
+  TOTAL                     3,653  100.0%
+
+  Key Observation:
+  Only 101 days (2.8%) qualify as "Good" over 10 years.
+  Combined Poor + Very Poor + Severe = 45.4% of all days.
+
+
+--------------------------------------------------------------------------------
+SEASONAL & TEMPORAL PATTERNS
+--------------------------------------------------------------------------------
+
+  Worst Month  : November  (avg AQI 407.7 — Severe)
+                 Caused by post-harvest stubble burning in neighbouring states,
+                 temperature inversions, and reduced wind speeds.
+  Best Month   : August    (avg AQI  83.6 — Satisfactory)
+                 Monsoon rains wash out particulate matter.
+
+  Seasonal averages (approximate):
+    Winter  (Dec–Feb)   : mean AQI ~312  (Very Poor)
+    Autumn  (Oct–Nov)   : mean AQI ~354  (Very Poor / Severe boundary)
+    Spring  (Mar–May)   : mean AQI ~157  (Poor)
+    Monsoon (Jun–Sep)   : mean AQI  ~99  (Satisfactory)
+
+  COVID-19 Lockdown Effect (April–June 2020):
+    Lockdown period avg AQI : 55.0
+    10-year baseline (same period) : 126.8
+    Reduction : 56.6% (71.8 AQI units)
+    Annual mean 2020 : ~175 — lowest year in the dataset
+
+
+--------------------------------------------------------------------------------
+TOP FEATURE CORRELATIONS WITH AQI
+--------------------------------------------------------------------------------
+
+  Feature        Pearson r    Direction   Interpretation
+  -------------- ------------ ----------- -----------------------------------
+  PM2.5          +0.9763      Positive    Primary AQI driver
+  PM10           +0.9744      Positive    Primary AQI driver
+  CO             +0.9549      Positive    Combustion / traffic indicator
+  NOx            +0.9547      Positive    Vehicular emissions
+  NO             +0.9369      Positive    Combustion by-product
+  Benzene        +0.9170      Positive    Industrial / vehicular VOC
+  NO2            +0.9080      Positive    Traffic / industrial emissions
+  Toluene        +0.8890      Positive    Industrial VOC
+  Xylene         +0.8700      Positive    Industrial VOC
+  NH3            +0.8370      Positive    Agricultural / industrial emissions
+  SO2            +0.8170      Positive    Thermal power plants
+  O3             +0.4560      Positive    Weak; photochemical, not combustion
+  Humidity_pct   -0.0670      Negative    Minimal effect
+  WindSpeed_kmh  -0.7240      Negative    Disperses pollutants; AQI < 200
+                                          when wind speed > 12 km/h
+  Temperature_C  -0.7490      Negative    Higher temp = cleaner air (monsoon)
+
+  Note: PM2.5 and PM10 are both mandatory inputs for AQI calculation under
+  Indian NAAQS, which explains their near-perfect correlation with AQI.
+
+
+--------------------------------------------------------------------------------
+FEATURES USED IN MODELLING
+--------------------------------------------------------------------------------
+
+  Input features (12 pollutants used for all ML, ANN, and regression models):
+    PM2.5, PM10, NO, NO2, NOx, NH3, CO, SO2, O3, Benzene, Toluene, Xylene
+
+  Target variables:
+    Regression    : AQI        (continuous float, 0–500)
+    Classification: AQI_Bucket (6-class string label)
+
+  Features NOT used as model inputs (used only for EDA):
+    Datetime, Month, City, Temperature_C, Humidity_pct, WindSpeed_kmh
+
+  Train / Test Split (ML models):   80% train / 20% test
+  Train / Val / Test Split (ANN):   70% / 15% / 15%
+
+
+--------------------------------------------------------------------------------
+IMPORTANT NOTES FOR REPRODUCIBILITY
+--------------------------------------------------------------------------------
+
+  1. CO is measured in mg/m³, while all other pollutants are in µg/m³.
+     This unit difference is handled by StandardScaler during preprocessing,
+     which normalises all features to zero mean and unit variance before
+     feeding into Ridge Regression and ANN models.
+
+  2. The Datetime column is stored as a string in DD/MM/YYYY format.
+     Parse with: pd.read_csv(..., parse_dates=['Datetime'], dayfirst=True)
+     Or convert after loading:
+       df['Datetime'] = pd.to_datetime(df['Datetime'], dayfirst=True)
+
+  3. The dataset is already fully clean (0 missing values). No imputation
+     is required when loading this updated file.
+
+  4. AQI values above 500 are theoretically possible but capped at 499
+     in this dataset (CPCB monitoring cap).
+
+  5. The Month column (integer 1–12) is a convenience column derived from
+     Datetime. It is used for seasonal grouping in EDA but is NOT used
+     as a feature in any predictive model.
+
+
+--------------------------------------------------------------------------------
+HOW TO LOAD IN PYTHON
+--------------------------------------------------------------------------------
+
+  import pandas as pd
+
+  df = pd.read_csv(
+      "data/UPDATED_DELHI_AQI_DATA.csv",
+      parse_dates=["Datetime"],
+      dayfirst=True
+  )
+
+  # Feature matrix and targets
+  FEATURES = ["PM2.5", "PM10", "NO", "NO2", "NOx",
+              "NH3", "CO", "SO2", "O3", "Benzene", "Toluene", "Xylene"]
+
+  X = df[FEATURES]
+  y_reg = df["AQI"]           # regression target
+  y_clf = df["AQI_Bucket"]    # classification target
+
+  print(df.shape)             # (3653, 20)
+  print(df.dtypes)
+  print(df.isnull().sum())    # all zeros
+
+
+================================================================================
