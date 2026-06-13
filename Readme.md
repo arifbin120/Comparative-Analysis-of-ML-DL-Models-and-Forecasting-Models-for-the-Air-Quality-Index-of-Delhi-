@@ -1,8 +1,6 @@
-================================================================================
+
   COMPARATIVE ANALYSIS OF ML, DEEP LEARNING, AND FORECASTING MODELS FOR AQI
   Delhi Air Quality Index Prediction (2015-2024)
-================================================================================
-
 AUTHORS
 -------
 Sumit Kumar & Arif Bin Mushtaq
@@ -33,31 +31,6 @@ Pollution Control Board (CPCB), India, and addresses three core problems:
      cyclical pollution trends in Delhi's AQI over a 10-year period?
 
 
---------------------------------------------------------------------------------
-DATASET
---------------------------------------------------------------------------------
-
-Source   : Central Pollution Control Board (CPCB), India (via Kaggle)
-Period   : January 2015 - December 2024
-Records  : 3,653 daily observations
-Features : PM2.5, PM10, NO, NO2, NOx, NH3, CO, SO2, O3, Benzene, Toluene,
-           Xylene, Temperature, Humidity, Wind Speed, AQI, AQI Bucket, Datetime
-
-Dataset Links:
-  1. https://airquality.cpcb.gov.in/ccr/#/caaqm-dashboard/caaqm-landing/caaqm-data-availability
-  2. https://airquality.cpcb.gov.in/AQI_India/
-  3. https://www.aqi.in/dashboard/india/delhi/new-delhi  (live AQI)
-  4. https://drive.google.com/drive/u/0/folders/1qWhVRV45fq5ZZ2HICBZ2b-vtnveHBmdP
-
-AQI Categories (CPCB / NAAQS):
-  0-50     Good          Minimal health impact
-  51-100   Satisfactory  Minor breathing discomfort for sensitive people
-  101-200  Moderate      Breathing discomfort for lung/asthma/heart patients
-  201-300  Poor          Breathing discomfort for most on prolonged exposure
-  301-400  Very Poor     Respiratory illness on prolonged exposure
-  401-500  Severe        Affects healthy people; seriously impacts those with
-                         existing diseases
-
 
 --------------------------------------------------------------------------------
 KEY FINDINGS
@@ -80,7 +53,6 @@ KEY FINDINGS
   - Improvement       : 56.6% reduction (71.8 AQI units)
   - Annual mean AQI for 2020: ~175 -- the lowest in the entire decade
   - Effect was temporary; AQI rebounded to historical norms once restrictions lifted
-<img width="1855" height="1499" alt="image" src="https://github.com/user-attachments/assets/4643afa9-c3c1-4d8f-a0e0-08a6a2f4eef8" />
 
 >> Top Pollutant Correlations with AQI
   PM2.5        r =  0.9763   Primary AQI driver (particulate matter)
@@ -91,8 +63,34 @@ KEY FINDINGS
   Temperature  r = -0.73     Negative -- cleaner air in warm months
   Wind Speed   r = -0.72     Negative -- disperses pollutants
 
-
+Features Used in the Model 
+[ City	Datetime	Month	PM2.5	PM10	NO	NO2	NOx	NH3	CO	...	Xylene	Temperature_C	Humidity_pct	WindSpeed_kmh	AQI	AQI_Bucket	Year	DayOfWeek	Quarter	Season ]
+AQI IS MOSTLY CALCULATED ON THE BASIS OF PM2.5 , PM10,NO,SO2 .Because the Correlation of these is higher with AQI .
 --------------------------------------------------------------------------------
+
+🔍 Project Overview
+
+The comparative analysis of Ridge Regression, Random Forest, Gradient Boosting, and XGBoost 
+revealed significant differences in model behavior and predictive accuracy for AQI estimation in 
+regression modeling. 
+And Comparing models such as Logistic Regression, Random Forest, Gradient Boosting, and XGBoost 
+revealed differences in performance and prediction accuracy across AQI categories. The 
+performance of these models was analyzed in terms of Accuracy, Macro F1 Score, Weighted F1 
+Score, and cross-validated accuracy. A confusion matrix was also created for all models to evaluate 
+their performance in predicting each AQI category specified by CPCB: Good, Satisfactory, 
+Moderate, Poor, Very Poor, and Severe.
+
+Also the  performance of six time series forecasting techniques on the Delhi AQI 
+dataset to forecast multi-year outcomes for 2025-2027. Techniques include basic forecasting 
+methods such as moving averages, exponential smoothing, ARIMA, and ML regression, as well 
+as more advanced machine learning regression techniques. The eight methods have been tested on 
+the same dataset and evaluated using the same five measures to assess each technique's accuracy. 
+The methods utilize historical AQI data for the city of Delhi. The forecasts are computed daily and 
+then accumulated or summarized for comparison purposes. The codes are written in Python using 
+libraries such as Numpy, SciPy, scikit-learn (Linear Regression, Ridge, Polynomial Features), and 
+custom numerical functions. 
+
+------------------------------------------------------------------
 MODELS AND RESULTS
 --------------------------------------------------------------------------------
 
@@ -105,12 +103,7 @@ MODELS AND RESULTS
   Gradient Boosting  0.9844  0.9841   11.40   14.20   0.9845
   Random Forest      0.9833  0.9830   11.61   14.68   0.9836
 
-  Winner: Ridge Regression
-  Reason: AQI is largely a linear combination of standardised pollutant
-  concentrations, directly mirroring the CPCB formula structure. All 12
-  features are useful (gap between R2 and Adj R2 < 0.003). No overfitting
-  (CV R2 tracks test R2 within 0.001-0.002).
-
+  
 
 == CLASSIFICATION (AQI Bucket / Category Prediction) ==
 
@@ -121,15 +114,7 @@ MODELS AND RESULTS
   Logistic Regression 0.8728    0.8418    0.8728   0.8569
   Random Forest       0.8632    0.8121    0.8632   0.8481
 
-  Winner: XGBoost -- leads across all four metrics.
-  Note: Logistic Regression outperforms Random Forest despite being simpler,
-  consistent with the near-linear structure seen in regression results.
-
-  Per-class F1 Highlights (XGBoost):
-    Very Poor : 0.919
-    Severe    : 0.923  (best)
-    Good      : 0.737  (hardest -- fewest training samples)
-
+  --------------------------------------------------------------------
 
 == DEEP LEARNING -- ARTIFICIAL NEURAL NETWORK (Classification) ==
 
@@ -163,7 +148,7 @@ MODELS AND RESULTS
     Severe         0.90     0.93   0.70         Regularized trades Severe for Good
     Very Poor      0.89     0.91   0.89         Consistent across all models
 
-
+----------------------------------------------------------------------
 == TIME SERIES FORECASTING (2025-2027 Projection) ==
 
   Method                   MAE     RMSE    MAPE(%)  R2       DA(%)
@@ -207,29 +192,6 @@ MODEL SELECTION GUIDE
 
 
 --------------------------------------------------------------------------------
-AQI FORMULA (Indian NAAQS Framework)
---------------------------------------------------------------------------------
-
-Step 1 -- Sub-index for each pollutant p (piecewise linear interpolation):
-
-  Ip = ((IHI - ILO) / (BPHI - BPLO)) * (Cp - BPLO) + ILO
-
-  Where:
-    Cp   = Observed concentration of pollutant p
-    BPHI = Upper breakpoint concentration >= Cp
-    BPLO = Lower breakpoint concentration <= Cp
-    IHI  = AQI value corresponding to BPHI
-    ILO  = AQI value corresponding to BPLO
-
-Step 2 -- Final AQI:
-  AQI = max(I1, I2, I3, ..., In)
-
-  Rules:
-    - PM2.5 and PM10 are mandatory pollutants
-    - Minimum 3 pollutants required to compute AQI
-    - At least 16 hours of data required per sub-index
-    - Up to 8 pollutants considered under NAAQS
-
 
 --------------------------------------------------------------------------------
 TECH STACK
