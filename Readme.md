@@ -80,6 +80,7 @@ KEY FINDINGS
   - Improvement       : 56.6% reduction (71.8 AQI units)
   - Annual mean AQI for 2020: ~175 -- the lowest in the entire decade
   - Effect was temporary; AQI rebounded to historical norms once restrictions lifted
+<img width="1855" height="1499" alt="image" src="https://github.com/user-attachments/assets/4643afa9-c3c1-4d8f-a0e0-08a6a2f4eef8" />
 
 >> Top Pollutant Correlations with AQI
   PM2.5        r =  0.9763   Primary AQI driver (particulate matter)
