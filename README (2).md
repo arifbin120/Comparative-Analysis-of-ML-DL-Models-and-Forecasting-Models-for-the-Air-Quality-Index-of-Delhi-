@@ -41,7 +41,7 @@ Three modelling paradigms are covered:
 |---|---|---|
 | ML Regression | Predict exact AQI value | Ridge Regression |
 | ML / DL Classification | Predict AQI category (Good → Severe) | XGBoost / ANN-Deep |
-| Time Series Forecasting | Project AQI trends (2025–2027) | Holt-Winters (TES) |
+| Time Series Forecasting | Project AQI trends (2025–2027) | SES,DES, Holt-Winters (TES),Regression |
 
 ---
 
